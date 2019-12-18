@@ -6,11 +6,10 @@
 // import { firebaseDatabase } from './utils/firebaseUtils';
 // console.log(firebaseDatabase)
 
-import { withRouter} from "react-router-dom";
+import {withRouter} from "react-router-dom";
 import React, { useState, Component } from 'react';
 import Routes from './routes';
 import logo from './images/logo-header.png';
-
 
 const App = ({ history }) => {
   // const route = () => <Routes />
