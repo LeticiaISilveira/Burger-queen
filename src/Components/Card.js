@@ -1,6 +1,6 @@
 import React from 'react';
 
-function Button(props) {
+function Card(props) {
   return (
     <button 
       class={props.className}
@@ -9,5 +9,6 @@ function Button(props) {
   )
 }
 
-export default Button
+
+export default Card
 

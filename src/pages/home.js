@@ -41,7 +41,7 @@ const Option= ({ history }) => {
   return (
     
     <div style={{display: 'flex', 'flex-direction': 'column', alignItems: 'center'}}>
-        <button type='image' src={ImgCozinha} style={{'margin-bottom':20, border:'none', backgroundColor:'transparent'}} onClick={() => history.push('/cozinha')}>
+        <button class='btn-home' type='image' src={ImgCozinha} style={{'margin-bottom':20, border:'none', backgroundColor:'transparent'}} onClick={() => history.push('/cozinha')}>
             <img src={ImgCozinha} alt="" style={{width:700}}></img>
         </button>
         <button style={{'margin-bottom':20, border:'none', backgroundColor:'transparent'}} onClick={() => history.push('/salao')}>

@@ -1,48 +1,31 @@
 import React, { useState, useEffect } from 'react';
 import {Link} from 'react-router-dom';
 import { firebaseDatabase } from '../utils/firebaseUtils';
+import button from '../Components/button.css';
+import Button from '../Components/Button';
 import salao from './salao.css';
+import Card from '../Components/Card';
+// import Input from '../Components/Input';
+
+
 
 function Menu () {
   
-  const [menu, setMenu] = useState([]);
+  const [menu, setMenu] = useState([]);  // 
 
-  useEffect(() => {
-
+  useEffect(() => { //no contexto desse projeto o use efect espera a tela renderizar para prosseguir o código q está dentro - assincronia
 
     firebaseDatabase.collection('breakfast')
      .get().then((doc => {
-       const teste = doc.docs.map((snap) => ({
+       const dataMenu = doc.docs.map((snap) => ({
          ...snap.data()
  
        }))
-       console.log(teste)
-       setMenu(teste)
+       setMenu(dataMenu)
      }))
      return
   }, [])
-     
-  
-//     return (
-//       <>
-//       <h1 style={{color:'white'}}>Menu</h1>
-//       {
-//         menu.map((item) => 
-//         <>
-//         <button>
-//           <div>{item.name}</div>
-//           <div>{item.price}</div>
-//         </button>
-//         </>
-//       )
-//       } 
-//         <button type='image'>
-//            <Link to='/'>Voltar</Link>
-//         </button>
-//       </>
-//     ); 
-// }
-
+    
   return (
     <div class='hall'>
       <div class='choice'>
@@ -64,11 +47,13 @@ function Menu () {
               <>
                 {
                   menu.map((item) => 
+                  //<MenuCard name={menuItem.name} price={menuItem.price} handleClick={()}
+
+                  //<Button name={menuItem.name} price={menuItem.price}>
                   <>
-                  <button>
-                    <div>{item.name}</div>
-                    <div>{item.price}</div>
-                  </button>
+                  {/* <button>name={item.name} price={item.price} </button> */}
+
+                  <Card title={item.name} addtitle={item.price} className={'btn-card'}/>
                   </>
                 )
                 } 
@@ -83,32 +68,39 @@ function Menu () {
           </div>
       </div>
       <div class='submit'>
-        <button type='image'>
+        {/* <button>
           <Link to='/'>Voltar</Link>
         </button>
         <button class='btn-submit'>
             ENVIAR
-        </button>
+        </button> */}
+  
+        {/* <Button title='Voltar' Link to='/'/> */}
+        {/* <Button name='Enviar' Link to='/'/> */}
       </div>
     </div>
 
+ 
+//     return (
+//       <>
+//       <h1 style={{color:'white'}}>Menu</h1>
+//       {
+//         menu.map((item) => 
+//         <>
+//         <button>
+//           <div>{item.name}</div>
+//           <div>{item.price}</div>
+//         </button>
+//         </>
+//       )
+//       } 
+//         <button type='image'>
+//            <Link to='/'>Voltar</Link>
+//         </button>
+//       </>
+//     ); 
+// }
 
-    // <>
-    // <h1 style={{color:'white'}}>Menu</h1>
-    // {
-    //   menu.map((item) => 
-    //   <>
-    //   <button>
-    //     <div>{item.name}</div>
-    //     <div>{item.price}</div>
-    //   </button>
-    //   </>
-    // )
-    // } 
-    //   <button type='image'>
-    //     <Link to='/'>Voltar</Link>
-    //   </button>
-    // </>
   ); 
   }
 
