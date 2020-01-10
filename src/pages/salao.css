@@ -26,9 +26,12 @@
     flex-direction: row;
 }
 
+.title-menu{
+  font-family: 'Rock Salt', cursive;
+}
 .items-box{
     height: 550px;
-    width: 40%;
+    width: 50%;
 }
 .item{
     height: 90%;
@@ -41,6 +44,12 @@
     border: solid thin #ed7f61
 }
 
+.btn-card{
+  width:80%;
+  height:50px;
+  font-family: 'Raleway', sans-serif;
+  font-size:21px;
+}
 .order-box{
     height: 550px;
     width: 60%;
@@ -53,7 +62,7 @@
     display: flex;
     align-items: center;
     background-color: #0e1013;
-    border: solid thin #ed7f61
+    /* border: solid thin #ed7f61 */
 
 }
 
