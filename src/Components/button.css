@@ -1,10 +1,10 @@
 .btn-card{
-  width: 150px;
-  height: 100px;
-  font-size: 20px;
-  margin-top: 10px;
+  /* height: 100px; */
+  margin-top: 12px;
   background-color: #ed7f61;
   color: black;
+  color: #ed7f61;
+  background-color:#272829;
   border: none;
   cursor: pointer;
 }

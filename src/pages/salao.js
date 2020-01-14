@@ -1,63 +1,79 @@
 import React, { useState, useEffect, useRef} from 'react';
 import {Link} from 'react-router-dom';
-import { firebaseDatabase } from '../utils/firebaseUtils';
-import button from '../Components/button.css';
+import { db } from '../utils/firebaseUtils';
+import Input from '../Components/Input';
 import Button from '../Components/Button';
 import salao from './salao.css';
 import Card from '../Components/Card';
 import swal from 'sweetalert';
-// import Input from '../Components/Input';
-
-
 
 function Hall() {
-
   const [menu, setMenu] = useState([])
-  const [breakfast, setBreakfast] = useState([]);
-  const [drinks, setDrinks] = useState([]);
-  const [request, setRequest] = useState([])
+  const [menuList, setMenuList] = useState([])
+  const [option, setOption] = useState('');
 
+  const [countItems, setCountItems] = useState(0);
 
+  const [items, setItems] = useState([]);
+  const [client, setClient] = useState('');
+  const [table, setTable] = useState('');
 
- useEffect(() => { //no contexto desse projeto o use efect espera a tela renderizar para prosseguir o código q está dentro - assincronia
+  // repositories.filter(repo => repo.favorite);
 
-    firebaseDatabase.collection('breakfast')
-     .get().then((doc => {
+ useEffect(() => {
+  db
+    .collection('menu')
+    .get().then((doc => {
        const dataMenu = doc.docs.map((snap) => ({
          ...snap.data()
  
-       }))
-       setMenu(dataMenu)
-     }))
-      
-    // firebaseDatabase.collection('drinks')
-    //  .get().then((doc => {
-    //    const dataMenu = doc.docs.map((snap) => ({
-    //      ...snap.data()
- 
-    //    }))
-    //    setMenu(dataMenu)
-    //  }))
-     return
-  }, [])
- 
-  const handleRequest = (item) => {
-          setRequest([...request, item])
-      }
+       }));
 
+       setMenuList(dataMenu);
+       setMenu(dataMenu);
+     }))
+  
+  }, [])
+
+  function optionMenu(e){
+    const buttonOption = e.currentTarget.id;  
+    if (buttonOption === "breakfast") {
+    const breakfast = menuList.filter((item) => item.isBreakfast);
+      setMenu(breakfast)
+    } else {
+    const lunchDinner = menuList.filter((item) => !item.isBreakfast);
+      setMenu(lunchDinner)
+    }
+  }
+
+  const clientName = useRef();
+  const tableNumber = useRef();
+  
+  const submit = () => {
+    const client = clientName.current.value;
+    const table = tableNumber.current.value;
+    db.collection('order')
+    .add({
+     client,
+     table,
+    //  amount,
+     items,
+     time: new Date().toLocaleString('pt-BR'),
+    })
+    .then(() =>
+    setClient(''),
+    setTable(''),
+    setItems([]),
+    swal ( " Pedido enviado com sucesso! " , " Quando estiver pronto você será notificado. " , "success" )
+    )}
 
   return (
     <div class='hall'>
-      <div class='choice'>
-        <h2 class='coffee'>CAFE</h2>
-        
-        <div class="switch__container">
-          <input id="switch-shadow" class="switch switch--shadow" type="checkbox"/>
-          <label for="switch-shadow"></label>
-        </div>
-        <h2 class='burger-shop'>HAMBURGUERIA </h2>
+      <div class='choice'>  
+        <Button title = {'CAFÉ'} id={'breakfast'} className={'btn-coffee'} handleClick={optionMenu}/>
+        <Button title = {'HAMBURGUERIA'} id={'lunch'} className={'btn-burger'} handleClick={optionMenu}/>
 
-    </div>
+    </div>  
 
       <div class='menu'>
         <div class='items-box'>
@@ -68,10 +84,10 @@ function Hall() {
               <>
                 {
                   menu.map((item) => 
-                  
                   <>
-                
-                    <Card title={item.name.replace(/\"/g, '') + ' '} addtitle={'  R$ ' + item.price}  className={'btn-card'} handleClick={() => request(item)}/>
+                    <Card title={item.name.replace(/"/g, '') + ' '} addtitle={'  R$ ' + item.price}  className={'btn-card'} handleClick={() => setCountItems(countItems + 1)}
+                    />
+                  
                   </>
                 )
                 } 
@@ -82,69 +98,47 @@ function Hall() {
           </div> 
 
           <div class='order-box'>
-            <div class='order'></div>
+            <div class='order'>
+                <div class='data-order'>
+                  <label>MESA: </label>
+                  <Input value={tableNumber} type="number" className={'input-table'}/>
+                  <label class='label-name'>CLIENTE: </label>
+                  <Input value={clientName} type="text" className={'input-name'}/>
+                </div> 
+                <div className={'title-order'}>
+                  <h2>Qde:</h2>
+                  <h2>Item:</h2>
+                  <h2>R$:</h2>
+                  <h2> </h2>             
+                </div> 
+                <div className={'items-order'}>
+     
+    
+                  <p className={'amount-input'}></p>
+                  <p className={'item-input'}></p>
+                  <p className={'price-input'}></p>
+                <button>Apagar</button>
+
+                </div>
+                <div className={'total-order'}>
+                  <h1>Total: </h1>
+                  <input className={'total'}></input>
+
+                </div>
+            
+            </div>
           </div>
       </div>
       <div class='submit'>
-        {/* <button>
-          <Link to='/'>Voltar</Link>
-        </button>
-        <button class='btn-submit'>
-            ENVIAR
-        </button> */}
-  
-        {/* <Button title='Voltar' Link to='/'/> */}
-        {/* <Button name='Enviar' Link to='/'/> */}
+        <Link to='/'><Button title = {'Voltar'} className={'btn-back'}/></Link>
+        
+        <Button title = {'Enviar'} className={'btn-submit'} handleClick={() => submit()}/>
+
       </div>
     </div>
-
- 
-//     return (
-//       <>
-//       <h1 style={{color:'white'}}>Menu</h1>
-//       {
-//         menu.map((item) => 
-//         <>
-//         <button>
-//           <div>{item.name}</div>
-//           <div>{item.price}</div>
-//         </button>
-//         </>
-//       )
-//       } 
-//         <button type='image'>
-//            <Link to='/'>Voltar</Link>
-//         </button>
-//       </>
-//     ); 
-// }
 
   ); 
   }
 
 
-
-
-function Submit(){
-  const [count, setCount] = useState(0)
-
-   useEffect(() => {
-    // Atualiza o titulo do documento usando a API do browser
-    document.title =  swal ( " Pedido enviado com sucesso! " , " Quando tiver pronto nóis te fala. " , "success" ) ;
-  });
- 
-  return(
-    
-    <div>
-      <p>You clicked {count} times </p>
-      
-      <button onClick={() => setCount(count + 1)}> 
-      [Enviar Pedido] Quando clicar, enviar lista para a cozinha o que efeito colateral, incorporar esse swal
-      </button>
-    </div>
-  );
-}
-
-
-// export default Hall;
-export default Submit;
+export default Hall;

@@ -10,7 +10,7 @@ function Submit(){
 
    useEffect(() => {
     // Atualiza o titulo do documento usando a API do browser
-    document.title =  swal ( " Pedido enviado com sucesso! " , " Quando tiver pronto nóis te fala. " , "success" ) ;
+    
   });
  
   return(
@@ -18,9 +18,9 @@ function Submit(){
     <div>
       <p>You clicked {count} times </p>
       
-      <button onClick={() => setCount(count + 1)}> 
-      [Enviar Pedido] Quando clicar, enviar lista para a cozinha o que efeito colateral, incorporar esse swal
-      </button>
+      <Button title = {'Enviar'}  handleClick={() => swal ( " Pedido enviado com sucesso! " , " Quando tiver pronto nóis te fala. " , "success" ) }/> 
+
+      
     </div>
   );
 }
