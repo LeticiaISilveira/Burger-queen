@@ -3,9 +3,9 @@ import React from 'react'
 function Input(props) {
 
     return (
-        <input ref={props.value} type={props.type} class={props.className} />
+        <input type={props.type} class={props.className} onChange={props.onChange} />
     )
-
+        //<input ref={props.value} type
 }
 
 
