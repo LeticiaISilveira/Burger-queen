@@ -1,4 +1,4 @@
-import React, { useState, useEffect} from 'react';
+import React, { useState, useEffect,useRef} from 'react';
 import {Link} from 'react-router-dom';
 import { db } from '../utils/firebaseUtils';
 import Input from '../Components/Input';
@@ -8,18 +8,11 @@ import Card from '../Components/Card';
 import CardOrder from '../Components/CardOrder';
 import swal from 'sweetalert';
 
-function Hall() {
+export default function Hall() {
+
   const [data, setData] = useState([]);
-
   const [menu, setMenu] = useState([]);
-
-  const [items, setItems] = useState([]);
-
-  const [client, setClient] = useState('');
-
-  const [table, setTable] = useState('');
-  
-  const [order, setOrder]=useState([]); // ordem 
+  const [order, setOrder]=useState([]);
 
  useEffect(() =>{
   setMenu([...breakfast])
@@ -41,12 +34,11 @@ function Hall() {
   const breakfast = data.filter((item) => item.isBreakfast);
   const lunchDinner = data.filter((item) => !item.isBreakfast);
   
-  const addItems = (item) => {
+  const  increaseItem = item => {
     
     setOrder([...order,item])// ta add item à variável 
-    console.log(item.name)
+    const index= order.findIndex(orderItem => orderItem.name === item.name )//trocar por id firebase
 
-    const index= order.findIndex(orderItem => orderItem.name === item.name )
     if(index === -1){
       setOrder([...order, {...item, amount:1}])
     }else{
@@ -55,31 +47,38 @@ function Hall() {
     }
 }
 
-  const total = order.reduce((acc, item)=>{
+  const decreaseItem = item => { 
+    item.amount -= 1
+    const filterDelete = order.filter(orderItem => orderItem.amount > 0);
+    setOrder([...filterDelete])
+  };
+
+  const total = order.reduce((acc, item) => {
     return acc + (item.price *item.amount);
   },0)
 
-  // const clientName = useRef();
-  // const tableNumber = useRef();
+  const clientName = useRef();
+  const tableNumber = useRef();
 
   const submit = () => {
-    // const client = clientName.current.value;
-    // const table = tableNumber.current.value;
+    const client = clientName.current.value;
+    const table = tableNumber.current.value;
+
     db.collection('order')
     .add({
      client,
      table,
      order,
-    //  status,
-    //  total,
+    status:'pendente',
+    total,
      time: new Date().toLocaleString('pt-BR'),
      timeOfPrepare: new Date().getTime()
     })
     .then(
-    swal ( " Pedido enviado com sucesso! " , " Quando estiver pronto você será notificado. " , "success" ),
-    setClient(''),
-    setTable(''),
-    setOrder([])
+    swal ( " Pedido enviado com sucesso! " , "  " , "success" ),
+    setOrder([]),
+    clientName.current.value = '',
+    tableNumber.current.value = ''
     )}
 
   return (
@@ -87,7 +86,6 @@ function Hall() {
       <div class='choice'>  
         <Button title = {'CAFÉ'} id={'breakfast'} className={'btn-coffee'} handleClick={()=> setMenu([...breakfast])}/>
         <Button title = {'HAMBURGUERIA'} id={'lunch'} className={'btn-burger'} handleClick={()=> setMenu([...lunchDinner])}/>
-
     </div>  
     <>
       <div class='menu'>
@@ -96,20 +94,14 @@ function Hall() {
 
           <h2 class='title-menu'>MENU</h2>
 
-              
                 {
                   menu.map((item) => 
-                  <>
-                    {/* {console.log('karine', item)} */}
-                    
-
+                 <>             
                      <Card 
-                        // title={item.name.replace(/"/g, '') + ' '} 
                         className={'btn-card'} 
-                        handleClick={()=> addItems(item)}
+                        handleClick={()=>  increaseItem(item)}
                         {...item}
-                          // addtitle={'  R$ ' + item.price}  
-                           
+                                                    
                     />
               
                   </>
@@ -123,33 +115,29 @@ function Hall() {
             <div class='order'>
                 <div class='data-order'>
                   <label>MESA: </label>
-                  <Input value={table} type="number" className={'input-table'} />
+                  <Input value={tableNumber} type="number" className={'input-table'} />
                   <label class='label-name'>CLIENTE: </label>
-                  <Input value={client} type="text" className={'input-name'}/>
+                  <Input value={clientName} type="text" className={'input-name'}/>
                 </div> 
                 <div className={'title-order'}>
-                          
+                  <h2>Qde:</h2>
+                  <h2>Item:</h2>
+                  <h2>R$:</h2>
+                  <h2>+</h2>
+                  <h2>-</h2>
                 </div> 
                 {
-                  order.map((product,index) => 
+                  order.map((product) => 
                   <>
-                  <CardOrder
+                  <CardOrder className={'card-order'}
                     amount={product.amount}
                     {...product}
-                    // key={index}
-                    // amount={product.amount}
-                    // price={product.price}
-                    // item={product}
+                    handleClickInc={()=> increaseItem(product)}
+                    handleClickDec={()=> decreaseItem(product)}
                   />
-                  
-                  
-              
+                
                   </>
-                )
-
-              
-
-              
+                )              
                 }
                 <div className={'total-order'}>
                   <h1>Total:{' '}{ total},00 </h1>
@@ -157,7 +145,6 @@ function Hall() {
 
                 </div>
                 
-            
             </div>
           </div>
           
@@ -173,6 +160,3 @@ function Hall() {
 
   ); 
   }
-
-
-export default Hall;
