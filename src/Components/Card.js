@@ -1,14 +1,18 @@
 import React from 'react';
+import Button from './Button';
 
-function Card(props) {
+export default function Card(props) {
   return (
-    <button 
-      class={props.className}
-      onClick={props.handleClick}>{props.title}{props.addtitle}
+    <>
+    <div>
+     <button class={props.className}  onClick={props.handleClick}>
+          {props.name} <br />
+          R${props.price},00
+          {props.amount}  
     </button>
+    </div>
+    </>
   )
 }
 
-
-export default Card
 

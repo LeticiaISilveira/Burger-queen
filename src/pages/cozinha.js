@@ -1,28 +1,56 @@
 import React, { useState, useEffect } from 'react';
 import {Link} from 'react-router-dom';
+import { db } from '../utils/firebaseUtils';
 import Button from '../Components/Button'; 
+import H1 from '../Components/H1'
 import button from '../Components/button.css';
-import swal from 'sweetalert';
+import CardKitchen from '../Components/CardKitchen';
 
-
-function Submit(){
-  const [count, setCount] = useState(0)
-
-   useEffect(() => {
-    // Atualiza o titulo do documento usando a API do browser
+export default function Kitchen(){
+  const [data, setData] = useState([]);
+  // const [status, setStatus] = useState([]);
+  
+  useEffect(() => { 
+    db
+      .collection('order').orderBy('time')
+      .get().then((doc => {
+        const dataMenu = doc.docs.map((snap) => ({
+          ...snap.data()
+        }));
+        setData(dataMenu);
+      }))
     
-  });
- 
+    }, [])
+
+
+    const pending = data.filter((item) => item.status === 'pendente');
+    console.log(pending)
+
   return(
     
-    <div>
-      <p>You clicked {count} times </p>
-      
-      <Button title = {'Enviar'}  handleClick={() => swal ( " Pedido enviado com sucesso! " , " Quando tiver pronto nóis te fala. " , "success" ) }/> 
+    <div>    
+       <div> 
+       <H1 className='request-title' title='PEDIDOS PENDENTES'/>            
+      </div>
+      <div className='container-card-kitchen'>
+        {
+          data.map((request) => 
+          
+          <>
+          <CardKitchen
+            {...request}
+            // handleClick={()=> ready(request)
+          /> 
+          </>
+          )              
+        } 
 
-      
+      </div>
+      <div>
+        <Link to='/'><Button title = {'Voltar'} className={'btn-back-kitchen'}/></Link>
+      </div>
     </div>
+    
   );
 }
 
-export default Submit;
