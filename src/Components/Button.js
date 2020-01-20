@@ -1,6 +1,6 @@
 import React from 'react';
 
-function Button(props) {
+export default function Button(props) {
   return (
     <button
       id={props.id}
@@ -9,6 +9,3 @@ function Button(props) {
     </button>
   )
 }
-
-export default Button
-
