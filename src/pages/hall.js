@@ -149,6 +149,7 @@ export default function Hall() {
       </div>
       </>
       <div class='submit'>
+      
         <Link to='/pedidosprontos'><Button title = {'Ver Pedidos Prontos'} className={'btn-ready'}/></Link>
         
         <Button title = {'Enviar'} className={'btn-submit'} handleClick={() => submit()}/>
