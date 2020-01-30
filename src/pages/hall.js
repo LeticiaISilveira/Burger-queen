@@ -7,6 +7,7 @@ import salao from './pages.css';
 import Card from '../Components/Card';
 import CardOrder from '../Components/CardOrder';
 import swal from 'sweetalert';
+import Header from '../Components/Header';
 
 export default function Hall() {
 
@@ -83,6 +84,8 @@ export default function Hall() {
 
   return (
     <div class='hall'>
+    <Header></Header>
+    <Link to='/pedidosprontos'><Button title = {'Ver Pedidos Prontos'} className={'btn-ready'}/></Link>
       <div class='choice'>  
         <Button title = {'CAFÉ'} id={'breakfast'} className={'btn-coffee'} handleClick={()=> setMenu([...breakfast])}/>
         <Button title = {'HAMBURGUERIA'} id={'lunch'} className={'btn-burger'} handleClick={()=> setMenu([...burgerShop])}/>
@@ -150,8 +153,7 @@ export default function Hall() {
       </>
       <div class='submit'>
       
-        <Link to='/pedidosprontos'><Button title = {'Ver Pedidos Prontos'} className={'btn-ready'}/></Link>
-        
+        <Link to='/'><Button title = {'Voltar'} className={'btn-back-kitchen'}/></Link>
         <Button title = {'Enviar'} className={'btn-submit'} handleClick={() => submit()}/>
 
       </div>

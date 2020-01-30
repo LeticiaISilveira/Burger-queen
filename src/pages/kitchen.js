@@ -3,7 +3,6 @@ import {Link} from 'react-router-dom';
 import { db } from '../utils/firebaseUtils';
 import Button from '../Components/Button'; 
 import H1 from '../Components/H1'
-import button from '../Components/button.css';
 import CardKitchen from '../Components/CardKitchen';
 
 export default function Kitchen(){
