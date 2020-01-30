@@ -80,7 +80,7 @@ export default function OrderReady(){
       </div>
 
       <div>
-        <Link to='/'><Button title = {'Voltar'} className={'btn-back-kitchen'}/></Link>
+        <Link to='/salao'><Button title = {'Voltar'} className={'btn-back-kitchen'}/></Link>
       </div>
     </div>
     

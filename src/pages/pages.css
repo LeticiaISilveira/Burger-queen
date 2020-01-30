@@ -90,6 +90,14 @@
   border: none;
 }
 
+.btn-amount{
+  width: 40px;
+  background-color: #ed7f61;
+  border: none;
+  color: black;
+  font-size:21px;
+}
+
 .btn-back-kitchen{
   margin-left: 20px;
 }

@@ -8,8 +8,8 @@ export default function CardOrder(props){
             <div>R${props.price},00 </div>         
             {props.timestamp}
             <div>
-            <button onClick={props.handleClickInc}>+</button>
-            <button onClick={props.handleClickDec}>-</button>
+            <button className={'btn-amount'} onClick={props.handleClickInc}>+</button>
+            <button className={'btn-amount'} onClick={props.handleClickDec}>-</button>
             </div>
        </div>
     )};
