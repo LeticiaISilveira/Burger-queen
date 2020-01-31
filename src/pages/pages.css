@@ -1,3 +1,14 @@
+.btn-ready{
+  width: 240px;
+  height: 120px;
+  background-color: antiquewhite;
+  font-size: 22px;
+  font-family: 'Raleway', sans-serif;
+  position: fixed; top: 0; left: 450px; right: 20px;
+  outline: 1px solid #444; background: #fff;  
+
+}
+
 .hall{
     color: #ed7f61;
     display: flex;
@@ -108,7 +119,7 @@
 }
 
 .order-box{
-    height: 550px;
+    max-height: 550px;
     width: 60%;
 }
 .order{
@@ -275,19 +286,32 @@
   background-color:#ed7f61;
 }
 
-.btn-ready{
-  width: 240px;
-  height: 120px;
-  background-color: antiquewhite;
-  font-size: 22px;
-  font-family: 'Raleway', sans-serif;
-  position: fixed; top: 0; left: 450px; right: 20px;
-  outline: 1px solid #444; background: #fff;  
-
-}
-
-
 @media screen and (min-width: 800px) {
+  .btn-ready{
+    position: fixed; top: 0; left: 700px; right: 10px;
+  }
 
+  .hall{
+    flex-direction: row;
+    max-height: 480px;
+    margin-top: -20px;
+  }
 
+  .choice{
+    flex-direction: column;
+    height: 400px;
+  }
+
+  .items-box{
+    max-height: 480px;
+  }
+
+  .submit{
+    margin-top: 20px;
+  }
+  
+  .order-box{
+    max-height: 500px;
+  }
 }
+

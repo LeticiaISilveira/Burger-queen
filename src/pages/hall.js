@@ -80,84 +80,85 @@ export default function Hall() {
     setOrder([]),
     clientName.current.value = '',
     tableNumber.current.value = ''
-    )}
+      )}
 
-  return (
-    <div class='hall'>
-    <Header></Header>
-    <Link to='/pedidosprontos'><Button title = {'Ver Pedidos Prontos'} className={'btn-ready'}/></Link>
-      <div class='choice'>  
-        <Button title = {'CAFÉ'} id={'breakfast'} className={'btn-coffee'} handleClick={()=> setMenu([...breakfast])}/>
-        <Button title = {'HAMBURGUERIA'} id={'lunch'} className={'btn-burger'} handleClick={()=> setMenu([...burgerShop])}/>
-      </div>  
-    <>
-      <div class='menu'>
-        <div class='items-box'>
-          <div class='item'>
+    return (
+      <>
+      <Header></Header>
+      <div class='hall'>
+        <Link to='/pedidosprontos'><Button title = {'Ver Pedidos Prontos'} className={'btn-ready'}/></Link>
+        <div class='choice'>  
+          <Button title = {'CAFÉ'} id={'breakfast'} className={'btn-coffee'} handleClick={()=> setMenu([...breakfast])}/>
+          <Button title = {'HAMBURGUERIA'} id={'lunch'} className={'btn-burger'} handleClick={()=> setMenu([...burgerShop])}/>
+        </div>  
+      <>
+        <div class='menu'>
+          <div class='items-box'>
+            <div class='item'>
 
-          <h2 class='title-menu'>MENU</h2>
+            <h2 class='title-menu'>MENU</h2>
 
-                {
-                  menu.map((item) => 
-                 <>             
-                     <Card 
-                        className={'btn-card'} 
-                        handleClick={()=>  increaseItem(item)}
-                        {...item}
-                                                    
-                    />              
-                  </>
-                )
-                }            
-                      
-            </div>            
-          </div> 
+                  {
+                    menu.map((item) => 
+                  <>             
+                      <Card 
+                          className={'btn-card'} 
+                          handleClick={()=>  increaseItem(item)}
+                          {...item}
+                                                      
+                      />              
+                    </>
+                  )
+                  }            
+                        
+              </div>            
+            </div> 
 
-          <div class='order-box'>
-            <div class='order'>
-                <div class='data-order'>
-                  <label>MESA: </label>
-                  <Input value={tableNumber} type="number" className={'input-table'} />
-                  <label class='label-name'>CLIENTE: </label>
-                  <Input value={clientName} type="text" className={'input-name'}/>
-                </div> 
-                <div className={'title-order'}>
-                  <h2>Qde:</h2>
-                  <h2>Item:</h2>
-                  <h2>R$:</h2>
-                  <h2>+</h2>
-                  <h2>-</h2>
-                </div> 
-                {
-                  order.map((product) => 
-                  <>
-                  <CardOrder className={'card-order'}
-                    amount={product.amount}
-                    {...product}
-                    handleClickInc={()=> increaseItem(product)}
-                    handleClickDec={()=> decreaseItem(product)}
-                  />                
-                  </>
-                )              
-                }
-                <div className={'total-order'}>
-                  <h1>Total:{' '}{ total},00 </h1>
-                  <input className={'total'}></input>
+            <div class='order-box'>
+              <div class='order'>
+                  <div class='data-order'>
+                    <label>MESA: </label>
+                    <Input value={tableNumber} type="number" className={'input-table'} />
+                    <label class='label-name'>CLIENTE: </label>
+                    <Input value={clientName} type="text" className={'input-name'}/>
+                  </div> 
+                  <div className={'title-order'}>
+                    <h2>Qde:</h2>
+                    <h2>Item:</h2>
+                    <h2>R$:</h2>
+                    <h2>+</h2>
+                    <h2>-</h2>
+                  </div> 
+                  {
+                    order.map((product) => 
+                    <>
+                    <CardOrder className={'card-order'}
+                      amount={product.amount}
+                      {...product}
+                      handleClickInc={()=> increaseItem(product)}
+                      handleClickDec={()=> decreaseItem(product)}
+                    />                
+                    </>
+                  )              
+                  }
+                  <div className={'total-order'}>
+                    <h1>Total:{' '}{ total},00 </h1>
+                    <input className={'total'}></input>
 
-                </div>
-                
+                  </div>
+                  
+              </div>
             </div>
-          </div>
-          
-      </div>
+            
+        </div>
       </>
-      <div class='submit'>
-      
+     </div>
+     <div class='submit'>
         <Link to='/'><Button title = {'Voltar'} className={'btn-back-kitchen'}/></Link>
         <Button title = {'Enviar'} className={'btn-submit'} handleClick={() => submit()}/>
 
       </div>
-    </div>
+    </>
 
   ); 
   }

@@ -4,6 +4,7 @@ import { db } from '../utils/firebaseUtils';
 import Button from '../Components/Button'; 
 import CardDelivered from '../Components/CardDelivered';
 import CardReady from '../Components/CardReady';
+import Header from '../Components/Header';
 
 export default function OrderReady(){
     const [data, setData] = useState([]);
@@ -48,6 +49,7 @@ export default function OrderReady(){
   return(
     
     <div>   
+        <Header></Header>
         <div class='choice-order'>  
             <Button title = {'PRONTOS'} id={'ready'} className={'choice-ready'} handleClick={()=> setOrder([...ready])}/>
             <Button title = {'ENTREGUES'} id={'delivered'} className={'choice-delivered'} handleClick={()=> setOrder([...delivered])}/>

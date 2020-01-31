@@ -4,6 +4,7 @@ import { db } from '../utils/firebaseUtils';
 import Button from '../Components/Button'; 
 import H1 from '../Components/H1'
 import CardKitchen from '../Components/CardKitchen';
+import Header from '../Components/Header';
 
 export default function Kitchen(){
   const [order, setOrder] = useState([]);
@@ -42,8 +43,9 @@ export default function Kitchen(){
     
     <div>    
       <div> 
-      <H1 className='request-title' title='PEDIDOS PENDENTES'/>            
-    </div>
+        <Header></Header>
+        <H1 className='request-title' title='PEDIDOS PENDENTES'/>            
+      </div>
 
       <div className='container-card-kitchen'>
       {order.map((doc) => {
