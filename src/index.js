@@ -8,3 +8,13 @@ ReactDOM.render(
 <BrowserRouter>
 <App />
 </BrowserRouter>, document.getElementById('root'));
+
+if (process.env.NODE_ENV === 'production' && 'serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker
+      .register(`${process.env.PUBLIC_URL}/service-worker.js`)
+      .catch((error) => {
+        console.error('Não foi possível registrar o suporte offline.', error);
+      });
+  });
+}

@@ -20,6 +20,17 @@
   padding: 28px 36px 36px;
 }
 
+.offline-notice {
+  margin-bottom: 20px;
+  padding: 14px 18px;
+  color: #f7f1e9;
+  background: #342521;
+  border: 1px solid #ed7f61;
+  border-radius: 10px;
+  font-size: 0.95rem;
+  line-height: 1.5;
+}
+
 .page-heading {
   margin: 0 0 24px;
   color: #f7f1e9;

@@ -12,3 +12,13 @@ const config = {
 
 export const firebaseImpl = firebase.initializeApp(config);
 export const db = firebase.firestore();
+
+db.enablePersistence().catch((error) => {
+    if (error.code === 'failed-precondition') {
+        console.warn('O modo offline não está disponível em várias abas ao mesmo tempo.');
+    } else if (error.code === 'unimplemented') {
+        console.warn('O modo offline não é compatível com este navegador.');
+    } else {
+        console.error('Não foi possível ativar o modo offline do Firestore.', error);
+    }
+});
