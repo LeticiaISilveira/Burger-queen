@@ -1,16 +1,18 @@
-import {withRouter} from "react-router-dom";
 import React from 'react';
 import Routes from './routes';
 import Header from './Components/Header.js';
+import './App.css';
+import './pages/pages.css';
 
-const App = ({ history }) => {
-
+const App = () => {
   return (
-    <div> 
+    <div className="app">
       <Header></Header>
-      <Routes />
+      <main className="app-main">
+        <Routes />
+      </main>
     </div>
-  )
+  );
 }
 
-export default withRouter(App);
+export default App;

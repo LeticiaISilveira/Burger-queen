@@ -1,9 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import {Link} from 'react-router-dom';
 import { db } from '../utils/firebaseUtils';
-import Button from '../Components/Button'; 
 import H1 from '../Components/H1'
-import button from '../Components/button.css';
 import CardKitchen from '../Components/CardKitchen';
 
 export default function Kitchen(){
@@ -24,50 +22,42 @@ export default function Kitchen(){
     }, [])
 
     const changeStatus = (item) => {
-      item.status = 'pronto' ;
+      const newtime = new Date().toLocaleString('pt-BR');
       db
         .collection('order')
         .doc(item.id)
         .update({
-          status:'pronto',
-          newtime: new Date().toLocaleString('pt-BR'),
+          status: 'pronto',
+          newtime,
           newTimeOrder: new Date().getTime()
-      
-        }
-        ).then(
-          setOrder([...order])
-        )
+        })
+        .then(() => {
+          setOrder((currentOrder) => currentOrder.map((orderItem) => (
+            orderItem.id === item.id
+              ? { ...orderItem, status: 'pronto', newtime }
+              : orderItem
+          )));
+        });
   }  
      
-  return(
-    
-    <div>    
-      <div> 
-      <H1 className='request-title' title='PEDIDOS PENDENTES'/>            
-    </div>
+  const pendingOrders = order.filter((doc) => doc.status === 'pendente');
 
-      <div className='container-card-kitchen'>
-      {order.map((doc) => {
-          if(doc.status === "pendente"){
-              return (
-                <>
-                <CardKitchen
-                  {...doc}
-                  handleClick={()=> changeStatus(doc)}
-                />
-                </>
-              )
-
-          }
-      })}
+  return (
+    <section aria-labelledby="kitchen-heading">
+      <H1 id="kitchen-heading" className="request-title" title="Pedidos pendentes" />
+      <p className="page-subheading">Prepare os pedidos e marque-os como prontos para retirada.</p>
+      <div className="container-card-kitchen">
+        {pendingOrders.length ? pendingOrders.map((doc) => (
+          <CardKitchen
+            key={doc.id}
+            {...doc}
+            handleClick={() => changeStatus(doc)}
+          />
+        )) : <p className="empty-orders">Tudo em dia. Não há pedidos pendentes.</p>}
       </div>
-
-      <div>
-        <Link to='/'><Button title = {'Voltar'} className={'btn-back-kitchen'}/></Link>
-        
-      </div>
-    </div>
-    
+      <Link className="btn-back-kitchen back-link" to="/">
+        Voltar ao início
+      </Link>
+    </section>
   );
 }
-

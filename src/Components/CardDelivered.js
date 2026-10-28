@@ -1,14 +1,15 @@
 import React from 'react';
 
-export default function CardReady(props){
-    return(
-        <div className={'card-options-orders'}>
-            <p>Mesa: {props.table} Cliente: {props.client} </p>
-            <h3>Pedido:  <br></br>{props.order.map(item =><>» {item.amount}: {item.name}<br /></>)}</h3>
-            <p></p>
-            <p>Status: {props.status}</p>
-            <p>Pedido entregue em: {props.deliveredTime}</p>
-
-       </div>
-
-    )};
+export default function CardDelivered(props) {
+  return (
+    <article className="card-options-orders">
+      <p className="order-customer">Mesa {props.table} · {props.client}</p>
+      <ul className="order-items">
+        {props.order.map((item) => (
+          <li key={item.name}>{item.amount} × {item.name}</li>
+        ))}
+      </ul>
+      <p className="order-time">Entregue em: {props.deliveredTime}</p>
+    </article>
+  );
+}

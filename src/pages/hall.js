@@ -1,161 +1,172 @@
-import React, { useState, useEffect,useRef} from 'react';
+import React, { useState, useEffect } from 'react';
 import {Link} from 'react-router-dom';
 import { db } from '../utils/firebaseUtils';
 import Input from '../Components/Input';
 import Button from '../Components/Button';
-import salao from './pages.css';
 import Card from '../Components/Card';
 import CardOrder from '../Components/CardOrder';
 import swal from 'sweetalert';
 
 export default function Hall() {
-
   const [data, setData] = useState([]);
-  const [menu, setMenu] = useState([]);
-  const [order, setOrder]=useState([]);
+  const [category, setCategory] = useState('breakfast');
+  const [order, setOrder] = useState([]);
+  const [client, setClient] = useState('');
+  const [table, setTable] = useState('');
 
- useEffect(() =>{
-  setMenu([...breakfast])
- }, [data])
-
- useEffect(() => { 
-  db
-    .collection('menu')
-    .get().then((doc => {
-       const dataMenu = doc.docs.map((snap) => ({
-         ...snap.data()
- 
-       }));
-       setData(dataMenu);
-     }))
-  
-  }, [])
+  useEffect(() => {
+    db.collection('menu').get().then((doc) => {
+      const menuItems = doc.docs.map((snap) => ({
+        ...snap.data()
+      }));
+      setData(menuItems);
+    });
+  }, []);
 
   const breakfast = data.filter((item) => item.isBreakfast);
   const burgerShop = data.filter((item) => !item.isBreakfast);
-  
-  const  increaseItem = item => {
-    
-    setOrder([...order,item]) 
-    const index= order.findIndex(orderItem => orderItem.name === item.name )
+  const menu = category === 'breakfast' ? breakfast : burgerShop;
 
-    if(index === -1){
-      setOrder([...order, {...item, amount:1}])
-    }else{
-      order[index].amount += 1
-      setOrder([...order])
-    }
-}
+  const increaseItem = (item) => {
+    setOrder((currentOrder) => {
+      const existingItem = currentOrder.find((orderItem) => orderItem.name === item.name);
+      if (!existingItem) {
+        return [...currentOrder, { ...item, amount: 1 }];
+      }
+      return currentOrder.map((orderItem) => (
+        orderItem.name === item.name
+          ? { ...orderItem, amount: orderItem.amount + 1 }
+          : orderItem
+      ));
+    });
+  };
 
-  const decreaseItem = item => { 
-    item.amount -= 1
-    const filterDelete = order.filter(orderItem => orderItem.amount > 0);
-    setOrder([...filterDelete])
+  const decreaseItem = (item) => {
+    setOrder((currentOrder) => currentOrder
+      .map((orderItem) => (
+        orderItem.name === item.name
+          ? { ...orderItem, amount: orderItem.amount - 1 }
+          : orderItem
+      ))
+      .filter((orderItem) => orderItem.amount > 0));
   };
 
   const total = order.reduce((acc, item) => {
-    return acc + (item.price *item.amount);
-  },0)
-
-  const clientName = useRef();
-  const tableNumber = useRef();
+    return acc + (item.price * item.amount);
+  }, 0);
 
   const submit = () => {
-    const client = clientName.current.value;
-    const table = tableNumber.current.value;
-
-    db.collection('order')
-    .add({
-     client,
-     table,
-     order,
-    status:'pendente',
-    total,
-     time: new Date().toLocaleString('pt-BR'),
-     timeOrder: new Date().getTime()
-    })
-    .then(
-    swal ( " Pedido enviado com sucesso! " , "  " , "success" ),
-    setOrder([]),
-    clientName.current.value = '',
-    tableNumber.current.value = ''
-    )}
+    db.collection('order').add({
+      client,
+      table,
+      order,
+      status: 'pendente',
+      total,
+      time: new Date().toLocaleString('pt-BR'),
+      timeOrder: new Date().getTime()
+    }).then(() => {
+      swal('Pedido enviado com sucesso!', '', 'success');
+      setOrder([]);
+      setClient('');
+      setTable('');
+    });
+  };
 
   return (
-    <div class='hall'>
-      <div class='choice'>  
-        <Button title = {'CAFÉ'} id={'breakfast'} className={'btn-coffee'} handleClick={()=> setMenu([...breakfast])}/>
-        <Button title = {'HAMBURGUERIA'} id={'lunch'} className={'btn-burger'} handleClick={()=> setMenu([...burgerShop])}/>
-      </div>  
-    <>
-      <div class='menu'>
-        <div class='items-box'>
-          <div class='item'>
-
-          <h2 class='title-menu'>MENU</h2>
-
-                {
-                  menu.map((item) => 
-                 <>             
-                     <Card 
-                        className={'btn-card'} 
-                        handleClick={()=>  increaseItem(item)}
-                        {...item}
-                                                    
-                    />              
-                  </>
-                )
-                }            
-                      
-            </div>            
-          </div> 
-
-          <div class='order-box'>
-            <div class='order'>
-                <div class='data-order'>
-                  <label>MESA: </label>
-                  <Input value={tableNumber} type="number" className={'input-table'} />
-                  <label class='label-name'>CLIENTE: </label>
-                  <Input value={clientName} type="text" className={'input-name'}/>
-                </div> 
-                <div className={'title-order'}>
-                  <h2>Qde:</h2>
-                  <h2>Item:</h2>
-                  <h2>R$:</h2>
-                  <h2>+</h2>
-                  <h2>-</h2>
-                </div> 
-                {
-                  order.map((product) => 
-                  <>
-                  <CardOrder className={'card-order'}
-                    amount={product.amount}
-                    {...product}
-                    handleClickInc={()=> increaseItem(product)}
-                    handleClickDec={()=> decreaseItem(product)}
-                  />                
-                  </>
-                )              
-                }
-                <div className={'total-order'}>
-                  <h1>Total:{' '}{ total},00 </h1>
-                  <input className={'total'}></input>
-
-                </div>
-                
+    <section className="hall" aria-labelledby="hall-heading">
+      <h1 className="page-heading" id="hall-heading">Novo pedido</h1>
+      <p className="page-subheading">Escolha os itens e confirme os dados da mesa.</p>
+      <div className="choice" role="group" aria-label="Categoria do menu">
+        <Button
+          title="Café da manhã"
+          id="breakfast"
+          className="btn-coffee"
+          ariaPressed={category === 'breakfast'}
+          handleClick={() => setCategory('breakfast')}
+        />
+        <Button
+          title="Hamburgueria"
+          id="lunch"
+          className="btn-burger"
+          ariaPressed={category === 'burger'}
+          handleClick={() => setCategory('burger')}
+        />
+      </div>
+      <div className="menu">
+        <div className="items-box">
+          <div className="item">
+            <h2 className="title-menu">Menu</h2>
+            {menu.length ? menu.map((item) => (
+              <Card
+                key={item.name}
+                className="btn-card"
+                handleClick={() => increaseItem(item)}
+                {...item}
+              />
+            )) : <p className="empty-order">Nenhum item disponível nesta categoria.</p>}
+          </div>
+        </div>
+        <div className="order-box">
+          <div className="order">
+            <h2 className="order-title">Resumo do pedido</h2>
+            <div className="data-order">
+              <label className="field" htmlFor="table-number">
+                Mesa
+                <Input
+                  id="table-number"
+                  type="number"
+                  min="1"
+                  step="1"
+                  className="input-table"
+                  value={table}
+                  onChange={(event) => setTable(event.target.value)}
+                  placeholder="Nº"
+                />
+              </label>
+              <label className="field" htmlFor="client-name">
+                Cliente
+                <Input
+                  id="client-name"
+                  type="text"
+                  className="input-name"
+                  value={client}
+                  onChange={(event) => setClient(event.target.value)}
+                  placeholder="Nome do cliente"
+                />
+              </label>
+            </div>
+            <div className="title-order" aria-hidden="true">
+              <span>Qtd.</span><span>Item</span><span>Valor</span><span>+</span><span>-</span>
+            </div>
+            {order.length ? order.map((product) => (
+              <CardOrder
+                key={product.name}
+                amount={product.amount}
+                {...product}
+                handleClickInc={() => increaseItem(product)}
+                handleClickDec={() => decreaseItem(product)}
+              />
+            )) : <p className="empty-order">Adicione itens do menu para começar.</p>}
+            <div className="total-order">
+              <h2>Total</h2>
+              <span className="total">
+                {new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(total)}
+              </span>
             </div>
           </div>
-          
+        </div>
       </div>
-      </>
-      <div class='submit'>
-      
-        <Link to='/pedidosprontos'><Button title = {'Ver Pedidos Prontos'} className={'btn-ready'}/></Link>
-        
-        <Button title = {'Enviar'} className={'btn-submit'} handleClick={() => submit()}/>
-
+      <div className="submit">
+        <Link className="btn-ready ready-link" to="/pedidosprontos">
+          Ver pedidos prontos
+        </Link>
+        <Button
+          title="Enviar pedido"
+          className="btn-submit"
+          disabled={!order.length || !client.trim() || !Number.isInteger(Number(table)) || Number(table) < 1}
+          handleClick={submit}
+        />
       </div>
-    </div>
-
-  ); 
-  }
+    </section>
+  );
+}

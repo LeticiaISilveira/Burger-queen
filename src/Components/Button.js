@@ -4,7 +4,9 @@ export default function Button(props) {
   return (
     <button
       id={props.id}
-      class={props.className}
+      className={props.className}
+      aria-pressed={props.ariaPressed}
+      disabled={props.disabled}
       onClick={props.handleClick}>{props.title}{props.addtitle}
     </button>
   )

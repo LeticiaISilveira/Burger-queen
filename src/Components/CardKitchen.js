@@ -1,14 +1,18 @@
 import React from 'react';
 
-export default function CardKitchen(props){
-    return(
-        <div className={'card-options-orders'}>
-            <p>Mesa: {props.table} Cliente: {props.client} </p>
-            <h3>Pedido:  <br></br>{props.order.map(item =><>» {item.amount}: {item.name}<br /></>)}</h3>
-            <p></p>
-            <p>Status: {props.status}</p>
-            <p>Pedido feito em: {props.time}</p>
-            <button  className={'btn-status'} onClick={props.handleClick}>Marcar como Pronto</button>
-       </div>
-
-    )};
+export default function CardKitchen(props) {
+  return (
+    <article className="card-options-orders">
+      <p className="order-customer">Mesa {props.table} · {props.client}</p>
+      <ul className="order-items">
+        {props.order.map((item) => (
+          <li key={item.name}>{item.amount} × {item.name}</li>
+        ))}
+      </ul>
+      <p className="order-time">Pedido feito em: {props.time}</p>
+      <button className="btn-status" type="button" onClick={props.handleClick}>
+        Marcar como pronto
+      </button>
+    </article>
+  );
+}
